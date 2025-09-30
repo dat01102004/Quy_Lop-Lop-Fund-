@@ -1,0 +1,46 @@
+# ---------- Flutter / Dart ----------
+.dart_tool/
+.buildlog/
+.packages
+.pub-cache/
+.flutter-plugins
+.flutter-plugins-dependencies
+.melos_tool/
+coverage/
+build/
+
+# Android / iOS artifacts
+android/.gradle/
+android/app/debug/
+android/app/profile/
+android/app/release/
+ios/Pods/
+**/*.xcworkspace/
+**/*.xcuserstate
+**/*.xcuserdata/
+
+# IDE
+.vscode/
+.idea/
+
+# ---------- Laravel / PHP ----------
+/vendor/
+node_modules/
+storage/*.key
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+
+# Env & secrets
+.env
+.env.*.local
+.env.local
+
+# ---------- OS junk ----------
+.DS_Store
+Thumbs.db
+
+# ---------- Misc ----------
+*.iml
