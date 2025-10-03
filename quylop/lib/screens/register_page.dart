@@ -132,7 +132,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             obscureText: true,
             textInputAction: TextInputAction.next,
             decoration: const InputDecoration(
-              labelText: 'Mật khẩu (>=6 ký tự)',
+              labelText: 'Mật khẩu (Trên 6 ký tự)',
               border: OutlineInputBorder(),
             ),
           ),
@@ -152,7 +152,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
             decoration: const InputDecoration(
-              labelText: 'Điện thoại)',
+              labelText: 'Điện thoại (không bắt buộc)',
               border: OutlineInputBorder(),
             ),
           ),
@@ -163,7 +163,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               child: TextField(
                 controller: _dobCtl,
                 decoration: const InputDecoration(
-                  labelText: 'Ngày sinh',
+                  labelText: 'Ngày sinh (không bắt buộc)',
                   border: OutlineInputBorder(),
                 ),
               ),

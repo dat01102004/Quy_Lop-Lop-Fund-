@@ -20,6 +20,7 @@ import 'screens/class_list_page.dart';
 import 'screens/class_management_page.dart';
 import 'screens/expenses_page.dart';
 import 'screens/approved_payments_page.dart';
+import 'screens/ledger_page.dart';
 
 void main() {
   // Bắt mọi lỗi build để tránh “màn hình đen”
@@ -68,6 +69,16 @@ class LopFundApp extends ConsumerWidget {
         '/invoices': (_) => const InvoicesPage(),
         '/payments/review': (_) => const PaymentReviewPage(),
         '/reports/fee': (_) => const FeeReportPage(),
+        '/reports/ledger': (ctx) {
+          final s = r.read(sessionProvider);
+          final id = s.classId ?? 0;
+          if (id <= 0) {
+            return const Scaffold(
+              body: Center(child: Text('Chưa chọn lớp — không thể mở Sổ quỹ')),
+            );
+          }
+          return LedgerPage(classId: id); // classId bắt buộc
+        },
         '/fee-cycles/generate': (_) => const GenerateInvoicesPage(),
         '/classes': (_) => const ClassListPage(),
         '/class-management': (_) => const ClassManagementPage(),

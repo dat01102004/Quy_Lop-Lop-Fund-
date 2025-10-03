@@ -170,6 +170,12 @@ class _HomePageState extends ConsumerState<HomePage> {
         title: const Text('Lop Fund'),
         actions: [
           IconButton(
+            tooltip: 'Sổ quỹ',
+            icon: const Icon(Icons.menu_book_outlined),
+            onPressed: () => Navigator.of(context).pushNamed('/reports/ledger'),
+          ),
+
+          IconButton(
             tooltip: 'Làm mới',
             onPressed: () async {
               await _loadMe();
@@ -298,6 +304,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                     onTap: () =>
                         Navigator.of(context).pushNamed('/reports/fee'),
                   ),
+                // if (isTreasurer)
+                //   _ActionCard(
+                //   icon: Icons.menu_book_outlined,     // hoặc Icons.account_balance_wallet_outlined
+                //   title: 'Sổ quỹ',
+                //   subtitle: 'Tổng hợp thu - chi',
+                //   onTap: () => Navigator.of(context).pushNamed('/reports/ledger'),
+                // ),
+
                 if (s.classId != null && isTreasurer)
                   _ActionCard(
                     icon: Icons.group,

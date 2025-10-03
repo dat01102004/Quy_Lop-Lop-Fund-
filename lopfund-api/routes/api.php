@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/classes/{class}/fund-account',  [FundAccountController::class, 'show']);   // member được xem
     Route::put('/classes/{class}/fund-account',  [FundAccountController::class, 'upsert']); // owner/treasurer cấu hình
     Route::get('/classes/{class}/fund-account/summary', [FundAccountController::class, 'summary']);
+    Route::get('/classes/{class}/ledger', [FundAccountController::class, 'ledger']);// Sổ quỹ (ledger) – ai là member của lớp đều xem được
 
     Route::post('/classes/{class}/invoices/{invoice}/payments', [PaymentController::class,'submit']);
     Route::post('/classes/{class}/payments/{payment}/proof', [PaymentController::class,'uploadProof']);

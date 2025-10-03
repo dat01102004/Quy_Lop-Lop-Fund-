@@ -10,16 +10,24 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final _email = TextEditingController(text: 'owner@example.com');
-  final _password = TextEditingController(text: '123456');
+  final _email = TextEditingController();
+  final _password = TextEditingController();
   bool _loading = false;
   String? _error;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   Future<void> _doLogin() async {
     setState(() { _loading = true; _error = null; });
     try {
       await ref.read(authRepositoryProvider).login(
-        _email.text.trim(), _password.text,
+        _email.text.trim(),
+        _password.text,
       );
       if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/home');
@@ -40,26 +48,60 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           constraints: const BoxConstraints(maxWidth: 420),
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const Text('Đăng nhập', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              TextField(controller: _email, decoration: const InputDecoration(labelText: 'Email')),
-              const SizedBox(height: 12),
-              TextField(controller: _password, decoration: const InputDecoration(labelText: 'Mật khẩu'), obscureText: true),
-              const SizedBox(height: 16),
-              if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: _loading ? null : _doLogin,
-                child: _loading ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Đăng nhập'),
-              ),
-              const SizedBox(height: 8),
-              TextButton(
-                onPressed: _loading ? null : () => Navigator.of(context).pushNamed('/register'),
-                child: const Text('Chưa có tài khoản? Đăng ký'),
-              ),
-
-            ]),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Đăng nhập',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _email,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'you@gmail.com',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.username, AutofillHints.email],
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _password,
+                  decoration: const InputDecoration(
+                    labelText: 'Mật khẩu',
+                  ),
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _loading ? null : _doLogin(),
+                  autofillHints: const [AutofillHints.password],
+                ),
+                const SizedBox(height: 16),
+                if (_error != null)
+                  Text(
+                    _error!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: _loading ? null : _doLogin,
+                  child: _loading
+                      ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                      : const Text('Đăng nhập'),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: _loading ? null : () => Navigator.of(context).pushNamed('/register'),
+                  child: const Text('Chưa có tài khoản? Đăng ký'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

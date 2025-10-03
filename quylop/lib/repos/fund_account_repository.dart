@@ -17,6 +17,50 @@ class FundAccountRepository {
     return int.tryParse(v.toString()) ?? 0;
   }
 
+  /// Sổ tay thu/chi
+  /// GET /classes/{classId}/ledger?fee_cycle_id=&from=&to=
+  /// BE trả: { opening, income, expenses, closing, items: [...] }
+  Future<Map<String, dynamic>> getLedger({
+    required int classId,
+    int? feeCycleId,
+    DateTime? from,
+    DateTime? to,
+  }) async {
+    String? _d(DateTime? d) =>
+        d == null ? null : '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+    final q = <String, dynamic>{};
+    if (feeCycleId != null) q['fee_cycle_id'] = feeCycleId;
+    final fs = _d(from), ts = _d(to);
+    if (fs != null) q['from'] = fs;
+    if (ts != null) q['to'] = ts;
+
+    final res = await _dio.get('/classes/$classId/ledger', queryParameters: q);
+
+    // raw -> Map
+    final raw = (res.data is Map)
+        ? Map<String, dynamic>.from(res.data as Map)
+        : <String, dynamic>{};
+
+    // chuẩn hoá items thành List<Map<String, dynamic>>
+    final items = <Map<String, dynamic>>[];
+    final list = raw['items'];
+    if (list is List) {
+      for (final e in list) {
+        if (e is Map) items.add(Map<String, dynamic>.from(e as Map));
+      }
+    }
+
+    return {
+      // khớp đúng key BE đang trả
+      'opening': _toInt(raw['opening']),
+      'income': _toInt(raw['income']),
+      'expenses': _toInt(raw['expenses']),
+      'closing': _toInt(raw['closing']),
+      'items': items,
+    };
+  }
+
   /// GET /classes/{classId}/fund-account
   /// BE có thể trả trực tiếp {...} hoặc { fund_account: {...} }
   Future<Map<String, String>> getFundAccount({required int classId}) async {
@@ -72,7 +116,7 @@ class FundAccountRepository {
     };
   }
 
-  /// ✅ GET /classes/{classId}/fund-account/summary
+  /// GET /classes/{classId}/fund-account/summary
   /// Trả về { total_income, total_expense, balance } (int)
   /// Hỗ trợ filter: feeCycleId / from / to (YYYY-MM-DD)
   Future<Map<String, int>> getSummary({
